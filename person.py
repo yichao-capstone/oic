@@ -13,26 +13,15 @@ from pathlib import Path
 from typing import Dict, List, Optional
 import pandas as pd
 from supabase import create_client, Client
+from supabase_client import get_supabase_client
 
 # Load secrets from Streamlit secrets management
 try:
     OPENAI_API_KEY = st.secrets["openai"]["api_key"]
-    SUPABASE_URL = st.secrets["supabase"]["url"]
-    SUPABASE_KEY = st.secrets["supabase"]["key"]
     os.environ["OPENAI_API_KEY"] = OPENAI_API_KEY
 except KeyError as e:
     st.error(f"⚠️ Missing secret configuration: {e}. Please check your .streamlit/secrets.toml file.")
     st.stop()
-
-@st.cache_resource
-def get_supabase_client() -> Client:
-    try:
-        url = st.secrets["supabase"]["url"]
-        key = st.secrets["supabase"]["key"]
-        return create_client(url, key)
-    except KeyError as e:
-        st.error(f"⚠️ Missing Supabase configuration: {e}. Please check your .streamlit/secrets.toml file.")
-        st.stop()
 
 supabase = get_supabase_client()
 

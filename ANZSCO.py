@@ -1,6 +1,6 @@
 import streamlit as st
 import pandas as pd
-from person import get_supabase_client
+from supabase_client import get_supabase_client
 
 # 获取 Supabase 客户端
 supabase = get_supabase_client()
