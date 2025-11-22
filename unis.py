@@ -2,9 +2,18 @@ from __future__ import annotations
 import streamlit as st
 import json
 import pandas as pd
+import os
 from typing import List
 from pydantic import BaseModel, Field
 from langchain_openai import ChatOpenAI
+
+# Load secrets from Streamlit secrets management
+try:
+    OPENAI_API_KEY = st.secrets["openai"]["api_key"]
+    os.environ["OPENAI_API_KEY"] = OPENAI_API_KEY
+except KeyError as e:
+    st.error(f"⚠️ Missing secret configuration: {e}. Please check your .streamlit/secrets.toml file.")
+    st.stop()
 
 # 页面标题
 st.title("Universities")
@@ -156,10 +165,12 @@ def get_qs_top_universities(country: str, top_n: int = 20) -> List[dict]:
     Provide accurate QS World University Rankings data for universities in the specified country.
     Return ONLY valid JSON, no explanations or additional text."""
     
-    user_prompt = f"""Provide the top {top_n} universities in {country} based on the latest QS World University Rankings.
+    user_prompt = f"""Provide the top {top_n} universities in {country} based on the LATEST QS World University Rankings (global ranking, not country-specific ranking).
+    
+    IMPORTANT: Use the most recent QS World University Rankings data. The rank should be the GLOBAL WORLD RANKING, not a country-specific ranking.
     
     For each university, include:
-    - rank: QS World Ranking (integer)
+    - rank: QS World University Ranking (GLOBAL RANK, integer) - this is the worldwide ranking position
     - university_name: Full official name
     - location: City name
     - qs_score: QS Score if available (float, optional)
@@ -210,7 +221,7 @@ if st.session_state.selected_country:
     
     # 获取或加载 QS Top 大学数据
     if cache_key not in st.session_state:
-        with st.spinner(f"Loading QS Top Universities in {selected_country_info['name']}..."):
+        with st.spinner(f"Loading QS Top Universities in {selected_country_info['name']} (with global rankings)..."):
             universities_data = get_qs_top_universities(selected_country_info['name'], top_n=20)
             st.session_state[cache_key] = universities_data
     
@@ -229,7 +240,8 @@ if st.session_state.selected_country:
                 avg_score = df_universities['qs_score'].mean()
                 st.metric("Average QS Score", f"{avg_score:.1f}")
             else:
-                st.metric("Top Rank", f"#{df_universities['rank'].min()}")
+                top_rank = df_universities['rank'].min()
+                st.metric("Best Global Rank", f"#{int(top_rank)}")
         with col3:
             if 'location' in df_universities.columns:
                 unique_locations = df_universities['location'].nunique()
@@ -239,13 +251,15 @@ if st.session_state.selected_country:
         
         # 显示大学列表
         st.markdown("#### 📋 University Rankings")
+        st.caption("Rankings shown are QS World University Rankings (Global Ranking)")
         
         # 格式化显示
         display_df = df_universities[['rank', 'university_name', 'location']].copy()
         if 'qs_score' in df_universities.columns:
             display_df['qs_score'] = df_universities['qs_score'].apply(lambda x: f"{x:.1f}" if pd.notna(x) else "N/A")
         
-        display_df.columns = ['QS Rank', 'University Name', 'Location', 'QS Score'] if 'qs_score' in display_df.columns else ['QS Rank', 'University Name', 'Location']
+        # 确保排名列显示为全球排名
+        display_df.columns = ['QS World Rank', 'University Name', 'Location', 'QS Score'] if 'qs_score' in display_df.columns else ['QS World Rank', 'University Name', 'Location']
         
         st.dataframe(
             display_df,
