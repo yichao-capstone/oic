@@ -126,7 +126,7 @@ with col2:
     st.markdown("""
     <div class="service-card">
         <div class="service-icon">🏛️</div>
-        <div class="service-title">ANZSCO & ASCED</div>
+        <div class="service-title">ANZSCO & Australian Standard Classification of Education (ASCED)</div>
         <div class="service-description">
             Explore Australian and New Zealand Standard Classification of Occupations. 
             Find the perfect career code that matches your aspirations and qualifications.
@@ -219,7 +219,7 @@ with feature_col2:
     
     ### 🌏 Australian Focus
     - Specialized knowledge of Australian education system
-    - ANZSCO and ASCED classification expertise
+    - ANZSCO and Australian Standard Classification of Education (ASCED) classification expertise
     - Local university and industry insights
     """)
 

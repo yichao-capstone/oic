@@ -1,25 +1,30 @@
 # Core dependencies
-streamlit>=1.28.0
-pandas>=2.0.0
-numpy>=1.24.0
+streamlit>=1.28.0,<2.0.0
+pandas>=2.0.0,<3.0.0
+numpy>=1.24.0,<2.0.0
 
 # Data visualization
-plotly>=5.17.0
-matplotlib>=3.7.0
+plotly>=5.17.0,<6.0.0
+matplotlib>=3.7.0,<4.0.0
 
 # OpenAI and LangChain - use latest versions for Python 3.12 compatibility
-langchain-openai>=1.0.0
-langchain-core>=1.0.0
-langchain>=1.0.0
+langchain-openai>=1.0.0,<2.0.0
+langchain-core>=1.0.0,<2.0.0
+langchain>=1.0.0,<2.0.0
 
 # Pydantic - use v2.8.0+ for Python 3.12.4+ compatibility
-pydantic>=2.8.0
-pydantic-core>=2.18.0
+pydantic>=2.8.0,<3.0.0
+pydantic-core>=2.18.0,<3.0.0
 
-# Supabase - note: httpx version constraint for compatibility
-supabase>=2.0.0
+# Supabase - strict version constraints to avoid dependency conflicts
+supabase>=2.0.0,<3.0.0
 httpx>=0.24.0,<0.25.0
+httpcore>=0.17.0,<0.18.0
+gotrue>=2.7.0,<3.0.0
+postgrest>=0.13.0,<0.14.0
+storage3>=0.6.0,<0.7.0
+realtime>=1.0.0,<2.0.0
 
 # Optional but recommended
-python-dotenv>=1.0.0
+python-dotenv>=1.0.0,<2.0.0
 
