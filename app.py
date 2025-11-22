@@ -13,7 +13,8 @@ with st.sidebar:
 pages = [
     st.Page("./home.py", title="Home", icon="🏠"),
     st.Page("./person.py", title="Personal Survey"),
-    st.Page("./ANZSCO.py", title="ANZSCO and Australian Standard Classification of Education (ASCED)"),
+    st.Page("./ANZSCO.py", title="Australian Standard Classification of Education", icon="📚"),
+    st.Page("./anzsco_browser.py", title="ANZSCO Classification", icon="💼"),
     st.Page("./unis.py", title="University Recommendation"),
 ]
 

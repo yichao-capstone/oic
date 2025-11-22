@@ -125,11 +125,11 @@ with col1:
 with col2:
     st.markdown("""
     <div class="service-card">
-        <div class="service-icon">🏛️</div>
-        <div class="service-title">ANZSCO & Australian Standard Classification of Education (ASCED)</div>
+        <div class="service-icon">📚</div>
+        <div class="service-title">Australian Standard Classification of Education</div>
         <div class="service-description">
-            Explore Australian and New Zealand Standard Classification of Occupations. 
-            Find the perfect career code that matches your aspirations and qualifications.
+            Browse and explore Australian Standard Classification of Education fields. 
+            Navigate through broad, narrow, and detailed education classifications to find your ideal study area.
         </div>
     </div>
     """, unsafe_allow_html=True)
@@ -161,9 +161,9 @@ with col1:
        - Take our comprehensive personality and career assessment
        - Get insights into your interests, values, and working style
     
-    2. **Explore Career Options** 🔍
-       - Discover ANZSCO occupation codes that match your profile
-       - Understand skill requirements and career pathways
+    2. **Explore Education Fields** 🔍
+       - Browse ASCED education classifications
+       - Understand different study fields and their pathways
     
     3. **Find Your University** 🎓
        - Receive personalized university and course recommendations
@@ -205,9 +205,9 @@ with feature_col1:
     - Personalized recommendations based on your unique profile
     
     ### 📚 Comprehensive Database
-    - Complete ANZSCO occupation classification
+    - Complete ASCED education classification system
     - Australian university and course information
-    - Career pathway mapping and skill requirements
+    - Education field mapping and study pathways
     """)
 
 with feature_col2:
@@ -219,7 +219,7 @@ with feature_col2:
     
     ### 🌏 Australian Focus
     - Specialized knowledge of Australian education system
-    - ANZSCO and Australian Standard Classification of Education (ASCED) classification expertise
+    - Australian Standard Classification of Education (ASCED) classification expertise
     - Local university and industry insights
     """)
 
