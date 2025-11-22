@@ -36,7 +36,8 @@ st.markdown("""
         border: 1px solid #e0e0e0;
         display: flex;
         flex-direction: column;
-        min-height: 280px;
+        min-height: 320px;
+        max-height: 320px;
     }
     .service-card:hover {
         transform: translateY(-5px);
@@ -55,6 +56,10 @@ st.markdown("""
         margin-bottom: 1rem;
         text-align: center;
         flex-shrink: 0;
+        min-height: 3.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
     .service-description {
         color: #666;
@@ -98,12 +103,27 @@ st.markdown("## 🎓 Our Services")
 # 使用 equal heights 确保列对齐
 st.markdown("""
 <style>
-    .stColumn > div {
+    .stColumn {
         display: flex;
         flex-direction: column;
     }
+    .stColumn > div {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+    }
     .stColumn > div > div {
         flex: 1;
+    }
+    /* 确保所有卡片高度一致 */
+    [data-testid="column"] {
+        display: flex;
+        flex-direction: column;
+    }
+    [data-testid="column"] > div {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
     }
 </style>
 """, unsafe_allow_html=True)

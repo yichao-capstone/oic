@@ -12,10 +12,10 @@ with st.sidebar:
 # 定义页面
 pages = [
     st.Page("./home.py", title="Home", icon="🏠"),
-    st.Page("./person.py", title="Personal Survey"),
+    st.Page("./person.py", title="Personal Survey", icon="📊"),
     st.Page("./ANZSCO.py", title="Australian Standard Classification of Education", icon="📚"),
     st.Page("./anzsco_browser.py", title="ANZSCO Classification", icon="💼"),
-    st.Page("./unis.py", title="University Recommendation"),
+    st.Page("./unis.py", title="Universities", icon="🎓"),
 ]
 
 # 使用 Streamlit 的内置导航
