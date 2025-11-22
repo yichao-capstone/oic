@@ -16,6 +16,7 @@ pages = [
     st.Page("./ANZSCO.py", title="Australian Standard Classification of Education", icon="📚"),
     st.Page("./anzsco_browser.py", title="ANZSCO Classification", icon="💼"),
     st.Page("./unis.py", title="Universities", icon="🎓"),
+    st.Page("./major_search.py", title="Major Search", icon="🔍"),
 ]
 
 # 使用 Streamlit 的内置导航

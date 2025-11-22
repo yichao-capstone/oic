@@ -97,6 +97,19 @@ def sign_up(email: str, password: str):
         else:
             return False, f"❌ Error: {error_msg}"
 
+# 找回密码函数
+def reset_password(email: str):
+    """发送密码重置邮件"""
+    try:
+        # Supabase 会发送密码重置邮件到指定邮箱
+        supabase.auth.reset_password_for_email(email)
+        return True, "Password reset email sent! Please check your email inbox (and spam folder)."
+    except Exception as e:
+        error_msg = str(e)
+        # Supabase 出于安全考虑，即使邮箱不存在也会返回成功
+        # 所以这里总是返回成功消息
+        return True, "If an account exists with this email, a password reset link has been sent. Please check your email inbox (and spam folder)."
+
 # 登出函数
 def sign_out():
     """使用 Supabase Auth 登出"""
@@ -121,8 +134,8 @@ if not st.session_state.auth_user:
     st.markdown("---")
     st.info("Please log in with your email and password to access Personal Survey.")
     
-    # 创建标签页：登录和注册
-    tab1, tab2 = st.tabs(["Login", "Sign Up"])
+    # 创建标签页：登录、注册和找回密码
+    tab1, tab2, tab3 = st.tabs(["Login", "Sign Up", "Forgot Password"])
     
     with tab1:
         col1, col2, col3 = st.columns([1, 2, 1])
@@ -141,6 +154,14 @@ if not st.session_state.auth_user:
             )
             
             login_button = st.button("Login", type="primary", use_container_width=True, key="btn_login")
+            
+            # 忘记密码提示
+            st.markdown("---")
+            st.markdown("""
+            <div style="text-align: center; color: #666; font-size: 0.9rem;">
+                Forgot your password? Go to the "Forgot Password" tab above.
+            </div>
+            """, unsafe_allow_html=True)
             
             if login_button:
                 if login_email.strip() and login_password:
@@ -193,6 +214,37 @@ if not st.session_state.auth_user:
                 else:
                     st.warning("⚠️ Please fill in all fields.")
     
+    with tab3:
+        col1, col2, col3 = st.columns([1, 2, 1])
+        with col2:
+            st.markdown("### Reset Password")
+            st.info("Enter your email address and we'll send you a link to reset your password.")
+            
+            reset_email = st.text_input(
+                "Email Address",
+                placeholder="Enter your registered email address",
+                key="reset_email"
+            )
+            
+            reset_button = st.button("Send Reset Link", type="primary", use_container_width=True, key="btn_reset")
+            
+            if reset_button:
+                if reset_email.strip():
+                    # 验证邮箱格式
+                    import re
+                    email_pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
+                    if not re.match(email_pattern, reset_email.strip()):
+                        st.error("❌ Please enter a valid email address.")
+                    else:
+                        success, message = reset_password(reset_email.strip())
+                        if success:
+                            st.success(message)
+                            st.info("📧 Please check your email inbox (and spam folder) for the password reset link.")
+                        else:
+                            st.error(message)
+                else:
+                    st.warning("⚠️ Please enter your email address.")
+    
     st.stop()  # 阻止继续执行页面内容
 
 # 如果已登录，显示页面内容和退出登录选项
@@ -212,8 +264,8 @@ st.divider()
 # 允许查询任何用户的邮箱地址
 user_id = st.text_input(
     "User Email Address", 
-    value=st.session_state.auth_user.email if st.session_state.auth_user else "",
-    placeholder="Enter email address to query (default: your email)",
+    value="mark.m.2024@benendenguangzhou.cn",
+    placeholder="Enter email address to query",
     help="You can enter any user's email address to view their survey results."
 )
 
@@ -527,49 +579,50 @@ if "h_vals" in st.session_state:
     else:
         bs = st.session_state[dominant_type_key]
 
-def color_text_dynamic(text):
-    # 定义 RIASEC + HLAFPS 对应颜色（包含完整名称和缩写）
-    color_map = {
-        # RIASEC 类型
-        "Investigative": "#1f77b4",
-        "Realistic": "#9467bd",
-        "Artistic": "#e377c2",
-        "Social": "#2ca02c",
-        "Enterprising": "#ff7f0e",
-        "Conventional": "#8c564b",
-        # HLAFPS 类型 - 完整名称优先
-        "Learning & Achievement": "#17becf",
-        "Power & Status": "#7f7f7f",
-        "Hedonism": "#d62728",
-        "Altruism": "#2ca02c",
-        "Finance": "#bcbd22",
-        "Security": "#1f9d55",
-        # HLAFPS 类型 - 缩写/部分名称（用于匹配）
-        "Learning": "#17becf",
-        "Power": "#7f7f7f",
-    }
+    def color_text_dynamic(text):
+        # 定义 RIASEC + HLAFPS 对应颜色（包含完整名称和缩写）
+        color_map = {
+            # RIASEC 类型
+            "Investigative": "#1f77b4",
+            "Realistic": "#9467bd",
+            "Artistic": "#e377c2",
+            "Social": "#2ca02c",
+            "Enterprising": "#ff7f0e",
+            "Conventional": "#8c564b",
+            # HLAFPS 类型 - 完整名称优先
+            "Learning & Achievement": "#17becf",
+            "Power & Status": "#7f7f7f",
+            "Hedonism": "#d62728",
+            "Altruism": "#2ca02c",
+            "Finance": "#bcbd22",
+            "Security": "#1f9d55",
+            # HLAFPS 类型 - 缩写/部分名称（用于匹配）
+            "Learning": "#17becf",
+            "Power": "#7f7f7f",
+        }
 
-    # 先匹配完整名称（包含 & 的），再匹配单个词
-    # 按照长度降序排列，确保先匹配长的名称
-    sorted_items = sorted(color_map.items(), key=lambda x: len(x[0]), reverse=True)
+        # 先匹配完整名称（包含 & 的），再匹配单个词
+        # 按照长度降序排列，确保先匹配长的名称
+        sorted_items = sorted(color_map.items(), key=lambda x: len(x[0]), reverse=True)
+        
+        for word, color in sorted_items:
+            # 转义特殊字符用于正则表达式
+            escaped_word = re.escape(word)
+            # 匹配完整词，不替换单词的一部分
+            text = re.sub(
+                rf"\b{escaped_word}\b",
+                f"<span style='color:{color}; font-weight:600;'>{word}</span>",
+                text,
+                flags=re.IGNORECASE
+            )
+        return text
     
-    for word, color in sorted_items:
-        # 转义特殊字符用于正则表达式
-        escaped_word = re.escape(word)
-        # 匹配完整词，不替换单词的一部分
-        text = re.sub(
-            rf"\b{escaped_word}\b",
-            f"<span style='color:{color}; font-weight:600;'>{word}</span>",
-            text,
-            flags=re.IGNORECASE
-        )
-    return text
-st.divider()
-st.header("Your Dominant Type")
-colored = color_text_dynamic(bs.get("dominant_type", "N/A"))
-st.markdown(colored, unsafe_allow_html=True)
-st.write(bs.get("summary", "N/A"))
-st.divider()
+    st.divider()
+    st.header("Your Dominant Type")
+    colored = color_text_dynamic(bs.get("dominant_type", "N/A"))
+    st.markdown(colored, unsafe_allow_html=True)
+    st.write(bs.get("summary", "N/A"))
+    st.divider()
 
     # asced= (
     #             supabase.table("ased_detail")
